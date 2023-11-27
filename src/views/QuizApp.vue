@@ -5,7 +5,7 @@
     <img
       class="quiz-image"
       v-bind:src="quizzes[count].image"
-      v-bind:alt="クイズタイトル"
+      alt="クイズタイトル"
     />
     <div class="container">
       <button
