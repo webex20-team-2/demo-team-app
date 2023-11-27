@@ -1,68 +1,117 @@
 <template>
-  <h1>Vue クイズ</h1>
-  <div class="app">
-    <h2>Q. {{ "この星の名前は何でしょう？" }}</h2>
-    <img class="quiz-image" src="../assets/Ganymede.jpg" alt="クイズタイトル" />
-    <div id="container">
-      <button v-on:click="cho1()">
-        {{ choi1 }}
-      </button>
-      <button v-on:click="cho2()">
-        {{ choi2 }}
-      </button>
-      <button v-on:click="cho3()">
-        {{ choi3 }}
-      </button>
-    </div>
-    <div>{{ ans }}</div>
-  </div>
+  <QuizDisplay
+    :quiz="currentQuiz"
+    :choices="currentChoices"
+    :feedback="currentFeedback"
+    :isHiddenNextButton="isHiddenNextButton"
+    v-on:showFeedback="showFeedback"
+    v-on:showNextQuiz="showNextQuiz"
+  ></QuizDisplay>
 </template>
 
 <script>
+import QuizDisplay from "@/components/QuizDisplay.vue"
 export default {
+  components: { QuizDisplay },
   data() {
     return {
-      choi1: "ゴリアテ",
-      choi2: "ゼニガメ",
-      choi3: "ガニメデ",
-      ans: "答え",
+      quizIndex: 0,
+      currentFeedback: "答え",
+      isHiddenNextButton: true,
+      quizzes: [
+        {
+          text: "この星の名前は何でしょう？",
+          image: require("@/assets/Ganymede.jpg"),
+          choices: [
+            {
+              text: "ゴリアテ",
+              isCorrect: false,
+              feedback:
+                "残念！ゴリアテは、旧約聖書に登場するダビデに石で殺される巨人だよ。",
+            },
+            {
+              text: "ゼニガメ",
+              isCorrect: false,
+              feedback:
+                "残念！ゼニガメは、クサガメまたはニホンイシガメの幼体だよ。",
+            },
+            {
+              text: "ガニメデ",
+              isCorrect: true,
+              feedback: "正解！ガニメデは、木星の第三惑星だよ！",
+            },
+          ],
+        },
+        {
+          text: "いま、何問目？",
+          image: require("@/assets/Two.jpeg"),
+          choices: [
+            {
+              text: "１",
+              isCorrect: false,
+              feedback: "残念！ひとつ少ないよ。",
+            },
+            {
+              text: "２",
+              isCorrect: true,
+              feedback: "正解！１でも３でもないよ！",
+            },
+            {
+              text: "３",
+              isCorrect: false,
+              feedback: "残念！ひとつ多いよ。",
+            },
+          ],
+        },
+        {
+          text: "この城の名前は？",
+          image: require("@/assets/maruoka.png"),
+          choices: [
+            {
+              text: "丸岡城",
+              isCorrect: true,
+              feedback: "正解！どこからどうみても丸岡城だね。",
+            },
+            {
+              text: "丸亀城",
+              isCorrect: true,
+              feedback: "残念！どこからどうみても丸亀城ではないよ。",
+            },
+            {
+              text: "丸子城",
+              isCorrect: false,
+              feedback: "残念！どこからどうみても丸子城ではないよ。",
+            },
+          ],
+        },
+      ],
     }
   },
   methods: {
-    cho1() {
-      this.ans =
-        "残念！ゴリアテは、旧約聖書に登場するダビデに石で殺される巨人だよ。"
+    showFeedback: function (choiceIndex) {
+      const currentChoice = this.currentChoices[choiceIndex]
+      this.currentFeedback = currentChoice.feedback
+      if (this.quizIndex < 2) {
+        this.isHiddenNextButton = !currentChoice.isCorrect
+      }
     },
-    cho2() {
-      this.ans = "残念！ゼニガメは、クサガメまたはニホンイシガメの幼体だよ。"
+    showNextQuiz: function () {
+      this.quizIndex++
+      this.isHiddenNextButton = true
+      this.currentFeedback = ""
     },
-    cho3() {
-      this.ans = "正解！ガニメデは、木星の第三惑星だよ！"
+  },
+  computed: {
+    currentChoices: function () {
+      return this.quizzes[this.quizIndex].choices
+    },
+    currentQuiz: function () {
+      const quiz = this.quizzes[this.quizIndex]
+      return {
+        text: quiz.text,
+        image: quiz.image,
+      }
     },
   },
 }
 </script>
-
-<style>
-.app {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  align-items: center;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.quiz-image {
-  height: 300px;
-  width: 300px;
-  object-fit: contain;
-}
-
-.container {
-  display: flex;
-  height: 2em;
-  width: 300px;
-  padding: 1em;
-  justify-content: space-around;
-}
-</style>
