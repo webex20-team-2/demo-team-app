@@ -8,14 +8,12 @@
       v-bind:alt="クイズタイトル"
     />
     <div class="container">
-      <button v-on:click="cho1()">
-        {{ quizzes[count].choices[0].text }}
-      </button>
-      <button v-on:click="cho2()">
-        {{ quizzes[count].choices[1].text }}
-      </button>
-      <button v-on:click="cho3()">
-        {{ quizzes[count].choices[2].text }}
+      <button
+        v-for="(choice, i) in quizzes[count].choices"
+        v-bind:key="i"
+        v-on:click="choiced(choice)"
+      >
+        {{ choice.text }}
       </button>
     </div>
     <div>{{ feedback }}</div>
@@ -103,17 +101,9 @@ export default {
     }
   },
   methods: {
-    cho1() {
-      this.feedback = this.quizzes[this.count].choices[0].feedback
-      this.isCorrect = this.quizzes[this.count].choices[0].isCorrect
-    },
-    cho2() {
-      this.feedback = this.quizzes[this.count].choices[1].feedback
-      this.isCorrect = this.quizzes[this.count].choices[1].isCorrect
-    },
-    cho3() {
-      this.feedback = this.quizzes[this.count].choices[2].feedback
-      this.isCorrect = this.quizzes[this.count].choices[2].isCorrect
+    choiced(choice) {
+      this.feedback = choice.feedback
+      this.isCorrect = choice.isCorrect
     },
     correct() {
       this.count += 1
