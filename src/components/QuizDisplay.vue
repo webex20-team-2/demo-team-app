@@ -12,10 +12,7 @@
       </button>
     </div>
     <div>{{ feedback }}</div>
-    <button
-      v-bind:class="isHiddenNextButton ? hidden : ''"
-      v-on:click="$emit('showNextQuiz')"
-    >
+    <button v-show="!isHiddenNextButton" v-on:click="$emit('showNextQuiz')">
       次の問題へ
     </button>
   </div>
@@ -28,11 +25,6 @@ export default {
     feedback: String,
     quiz: Object,
     isHiddenNextButton: Boolean,
-  },
-  data() {
-    return {
-      hidden: "hidden",
-    }
   },
 }
 </script>
@@ -58,8 +50,5 @@ export default {
   width: 300px;
   padding: 1em;
   justify-content: space-around;
-}
-.hidden {
-  display: none;
 }
 </style>
